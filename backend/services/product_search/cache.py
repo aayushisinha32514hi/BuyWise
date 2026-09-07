@@ -338,7 +338,7 @@ def store_price_observation(
         return
 
     try:
-        conn = _get_connection(db_path)
+        conn = _get_conn(db_path)
         cursor = conn.cursor()
 
         # Check if identical observation recorded in last 60 minutes
@@ -386,7 +386,7 @@ def get_price_history(
     }
 
     try:
-        conn = _get_connection(db_path)
+        conn = _get_conn(db_path)
         cursor = conn.cursor()
 
         cursor.execute("""
