@@ -1,0 +1,100 @@
+{
+  "Baseline (Mean Predictor)": {
+    "cv_5fold_r2_mean": -0.0004,
+    "cv_5fold_r2_std": 0.0005,
+    "cv_5fold_mae": 7.302,
+    "cv_5fold_rmse": 9.211,
+    "train_r2": 0.0,
+    "test_r2": -0.0004,
+    "train_mae": 7.301,
+    "test_mae": 7.136,
+    "train_rmse": 9.216,
+    "test_rmse": 8.996
+  },
+  "Ridge Regression": {
+    "cv_5fold_r2_mean": 0.8336,
+    "cv_5fold_r2_std": 0.012,
+    "cv_5fold_mae": 2.73,
+    "cv_5fold_rmse": 3.755,
+    "train_r2": 0.8383,
+    "test_r2": 0.8523,
+    "train_mae": 2.693,
+    "test_mae": 2.551,
+    "train_rmse": 3.706,
+    "test_rmse": 3.456
+  },
+  "Random Forest Regressor": {
+    "cv_5fold_r2_mean": 0.9411,
+    "cv_5fold_r2_std": 0.0045,
+    "cv_5fold_mae": 1.639,
+    "cv_5fold_rmse": 2.234,
+    "train_r2": 0.9869,
+    "test_r2": 0.9496,
+    "train_mae": 0.804,
+    "test_mae": 1.465,
+    "train_rmse": 1.056,
+    "test_rmse": 2.019
+  },
+  "Gradient Boosting Regressor": {
+    "cv_5fold_r2_mean": 0.9679,
+    "cv_5fold_r2_std": 0.0038,
+    "cv_5fold_mae": 1.249,
+    "cv_5fold_rmse": 1.647,
+    "train_r2": 0.9885,
+    "test_r2": 0.9708,
+    "train_mae": 0.788,
+    "test_mae": 1.157,
+    "train_rmse": 0.99,
+    "test_rmse": 1.537,
+    "top_feature_importances": [
+      {
+        "feature": "discount_percentage",
+        "importance": 0.4432
+      },
+      {
+        "feature": "spec_fit_score",
+        "importance": 0.2295
+      },
+      {
+        "feature": "user_priority_value",
+        "importance": 0.1273
+      },
+      {
+        "feature": "price_to_budget_ratio",
+        "importance": 0.1001
+      },
+      {
+        "feature": "user_priority_budget",
+        "importance": 0.0275
+      },
+      {
+        "feature": "user_priority_balanced",
+        "importance": 0.0243
+      },
+      {
+        "feature": "rating",
+        "importance": 0.0242
+      },
+      {
+        "feature": "user_priority_rating",
+        "importance": 0.0147
+      },
+      {
+        "feature": "review_count",
+        "importance": 0.0045
+      },
+      {
+        "feature": "original_price",
+        "importance": 0.0016
+      },
+      {
+        "feature": "avg_req_weight",
+        "importance": 0.0008
+      },
+      {
+        "feature": "price",
+        "importance": 0.0008
+      }
+    ]
+  }
+}

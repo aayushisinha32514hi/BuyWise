@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BuyWise — AI Shopping & Multi-Retailer Price Comparison</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Main Responsive Container -->
+  <div class="app-shell">
+    
+    <!-- Top Header & Desktop Navigation -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-badge" onclick="switchTab('home')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <div onclick="switchTab('home')" style="cursor: pointer;">
+          <h1 class="logo-title">BuyWise</h1>
+          <span class="logo-sub">AI Multi-Retailer Price Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Desktop Nav Links (Visible on Tablet/Desktop) -->
+      <nav class="desktop-nav-links" id="desktop-nav">
+        <button class="desktop-nav-btn active" onclick="switchTab('home')" id="dnav-home">Home</button>
+        <button class="desktop-nav-btn" onclick="switchTab('search')" id="dnav-search">Explore</button>
+        <button class="desktop-nav-btn highlight-nav" onclick="switchTab('recommend')" id="dnav-recommend">⚡ AI Match</button>
+        <button class="desktop-nav-btn" onclick="switchTab('compare')" id="dnav-compare">Compare</button>
+        <button class="desktop-nav-btn" onclick="switchTab('saved')" id="dnav-saved">Saved</button>
+      </nav>
+
+      <div class="header-right">
+        <button class="user-auth-btn" id="auth-header-btn" onclick="openAuthModal()">
+          <span class="auth-icon">👤</span>
+          <span id="auth-btn-label">Sign In</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Content Views -->
+    <main class="app-content">
+
+      <!-- 1. HOME TAB -->
+      <section id="tab-home" class="tab-view active">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-tag">🇮🇳 2026 Indian Shopping Intelligence</div>
+          <h2>Find What Fits <span class="highlight">YOU</span></h2>
+          <p>Search live products across verified Indian merchants & get explainable AI recommendations.</p>
+          <div class="hero-search-bar" onclick="switchTab('search')">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>What are you looking for? (e.g. laptop under 80000, 5G phone, 1.5 ton AC...)</span>
+          </div>
+        </div>
+
+        <!-- Curated 10 Indian Shopping Categories -->
+        <div class="section-header">
+          <h3>Popular Categories</h3>
+          <span class="subtext">10 Verified Shopping Departments</span>
+        </div>
+        <div class="top-categories-grid" id="home-top-categories">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Featured High-Score Picks -->
+        <div class="section-header" style="margin-top: 24px;">
+          <div>
+            <h3>Trending Value Deals</h3>
+            <p class="subtext">Top BuyWise composite scores & multi-merchant offers</p>
+          </div>
+        </div>
+        <div class="products-grid" id="home-top-products">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </section>
+
+      <!-- 2. SEARCH & BROWSE TAB -->
+      <section id="tab-search" class="tab-view">
+        <!-- Search Input Box -->
+        <div class="search-box-wrapper">
+          <div class="search-input-group">
+            <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="search-query" placeholder="Search live Indian shopping catalog..." onkeyup="handleSearchKey(event)">
+            <button class="clear-btn" id="search-clear" onclick="clearSearch()" style="display: none;">✕</button>
+          </div>
+          <button class="filter-toggle-btn" onclick="toggleFilterDrawer()" title="Filter options">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+              <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Macro-Category Filter Chips -->
+        <div class="filter-chips-container" id="search-topcats-bar"></div>
+
+        <!-- Filter Drawer / Sheet -->
+        <div class="filter-sheet" id="filter-sheet">
+          <div class="filter-sheet-header">
+            <h4>Filter & Refine</h4>
+            <button class="close-sheet-btn" onclick="toggleFilterDrawer()">✕</button>
+          </div>
+          <div class="filter-group">
+            <label>Max Budget: <span id="budget-val">₹1,50,000</span></label>
+            <input type="range" id="filter-max-price" min="500" max="150000" step="500" value="150000" oninput="updateBudgetLabel(this.value); applyFilters();">
+          </div>
+          <div class="filter-group">
+            <label>Min Rating Threshold</label>
+            <div class="rating-pills">
+              <button class="pill active" onclick="setRatingFilter(0, this)">Any</button>
+              <button class="pill" onclick="setRatingFilter(3.5, this)">3.5★+</button>
+              <button class="pill" onclick="setRatingFilter(4.0, this)">4.0★+</button>
+              <button class="pill" onclick="setRatingFilter(4.3, this)">4.3★+</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Sort Results By</label>
+            <select id="filter-sort" onchange="applyFilters()">
+              <option value="score">BuyWise AI Score (Recommended)</option>
+              <option value="rating">Customer Rating (High to Low)</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="reviews">Most Reviewed</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Results Info & Products Grid -->
+        <div class="results-header">
+          <span id="results-count">Showing live shopping results</span>
+        </div>
+        <div class="products-grid" id="search-products-grid"></div>
+        <div class="pagination-wrapper" id="pagination-controls"></div>
+      </section>
+
+      <!-- 3. AI RECOMMENDATION (FOR YOU) TAB -->
+      <section id="tab-recommend" class="tab-view">
+        <div class="section-card">
+          <div class="rec-wizard-header">
+            <div class="spark-icon">⚡</div>
+            <div>
+              <h3>AI Decision Assistant</h3>
+              <p>Supervised ML model predicts suitability matched to your exact buying requirements.</p>
+            </div>
+          </div>
+
+          <!-- Natural Language Shopping Requirement Input Box -->
+          <div class="nlp-prompt-wrapper">
+            <div class="nlp-prompt-header">
+              <span class="nlp-badge">🧠 Natural Language Intent</span>
+              <span class="nlp-subtext">Optional: Describe what you need</span>
+            </div>
+            <div class="nlp-input-row">
+              <input type="text" id="rec-nlp-input" placeholder="e.g. Need a coding laptop under 80000 with 16GB RAM and fast SSD" onkeydown="if(event.key==='Enter'){event.preventDefault(); parseNaturalLanguagePrompt();}">
+              <button type="button" class="btn-nlp-parse" onclick="parseNaturalLanguagePrompt()" id="nlp-parse-btn">
+                <span>⚡ Auto-Fill</span>
+              </button>
+            </div>
+            <div id="nlp-parsed-status" class="nlp-parsed-status" style="display: none;"></div>
+          </div>
+
+          <form id="rec-form" onsubmit="executeRecommendation(event)">
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Target Category</label>
+                <select id="rec-category" onchange="onCategoryChange()" required>
+                  <option value="Laptops">Laptops & Computers</option>
+                  <option value="Mobiles">Mobiles & Accessories</option>
+                  <option value="Appliances">Home Appliances</option>
+                  <option value="TVs">TVs & Home Theater</option>
+                  <option value="Electronics">Audio & Electronics</option>
+                  <option value="Fashion">Fashion & Clothing</option>
+                  <option value="Footwear">Footwear & Shoes</option>
+                  <option value="Beauty">Beauty & Personal Care</option>
+                  <option value="Jewellery">Watches & Jewellery</option>
+                  <option value="Home">Home & Kitchen</option>
+                </select>
+              </div>
+              <div class="form-group half">
+                <label>Subcategory</label>
+                <select id="rec-subcategory" onchange="onSubcategoryChange()">
+                  <!-- Dynamically populated based on selected category -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Dynamic Category-Specific Buying Requirements & Priorities -->
+            <div class="form-group" id="rec-requirements-wrapper">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <label style="margin-bottom: 0;">Your Buying Priorities</label>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Rate importance (1★ to 5★)</span>
+              </div>
+              <div class="requirements-grid" id="rec-requirements-list">
+                <!-- Dynamically Injected by Category -->
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Min Budget (₹)</label>
+                <input type="number" id="rec-min-price" placeholder="0" min="0" value="1000">
+              </div>
+              <div class="form-group half">
+                <label>Max Budget (₹)</label>
+                <input type="number" id="rec-max-price" placeholder="50000" min="500" value="50000" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Preferred Brands (Optional)</label>
+              <input type="text" id="rec-preferred-brands" placeholder="e.g. Apple, Samsung, ASUS (comma-separated)">
+            </div>
+
+            <div class="form-group">
+              <label>Minimum Quality Threshold</label>
+              <select id="rec-min-rating">
+                <option value="4.0">4.0★ and above (Recommended)</option>
+                <option value="3.5">3.5★ and above</option>
+                <option value="4.3">4.3★+ (Top Tier Only)</option>
+                <option value="0">Any Rating</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Optimization Goal</label>
+              <div class="priority-grid">
+                <label class="priority-card">
+                  <input type="radio" name="rec-priority" value="value" checked>
+                  <span class="p-title">💎 Best Value</span>
+                  <span class="p-desc">High discount & spec efficiency</span>
+                </label>
+                <label class="priority-card">
+                  <input type="radio" name="rec-priority" value="rating">
+                  <span class="p-title">⭐ Top Quality</span>
+                  <span class="p-desc">Highest verified customer rating</span>
+                </label>
+                <label class="priority-card">
+                  <input type="radio" name="rec-priority" value="budget">
+                  <span class="p-title">💰 Budget Saver</span>
+                  <span class="p-desc">Lowest price within spec bounds</span>
+                </label>
+                <label class="priority-card">
+                  <input type="radio" name="rec-priority" value="balanced">
+                  <span class="p-title">⚖️ Balanced</span>
+                  <span class="p-desc">Equal multi-attribute weighting</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary full-width" id="rec-submit-btn">
+              Find My Best Options
+            </button>
+          </form>
+        </div>
+
+        <!-- Recommendation Results Container -->
+        <div id="rec-results-container" style="display: none;">
+          <div class="candidate-analysis-banner" id="candidate-analysis-banner">
+            <span class="pulse-dot"></span>
+            <span id="analysis-stats-text">Analyzing candidate pool...</span>
+          </div>
+          <div class="section-header" style="margin-top: 14px;">
+            <h3>Ranked Recommendations</h3>
+            <span class="badge-success" id="rec-matches-count">Matches</span>
+          </div>
+          <div class="rec-cards-list" id="rec-cards-list"></div>
+        </div>
+      </section>
+
+      <!-- 4. COMPARE TAB -->
+      <section id="tab-compare" class="tab-view">
+        <div class="section-header">
+          <h3>Compare Products</h3>
+          <button class="btn-outline-sm" onclick="clearComparison()">Clear All</button>
+        </div>
+        <p class="section-subtitle">Multi-retailer price quotes & specification matrix with winner badges.</p>
+
+        <div id="compare-empty-state" class="empty-state">
+          <div class="empty-icon">⚖️</div>
+          <h4>No Products in Comparison</h4>
+          <p>Tap "Add to Compare" on any product card or AI Match result to compare up to 4 items.</p>
+          <button class="btn-primary-sm" onclick="switchTab('search')">Browse Products</button>
+        </div>
+
+        <div id="compare-matrix-container" style="display: none;">
+          <div class="compare-scroll-wrapper" id="compare-matrix"></div>
+        </div>
+      </section>
+
+      <!-- 5. SAVED / WISHLIST TAB -->
+      <section id="tab-saved" class="tab-view">
+        <div class="section-header">
+          <h3>Saved Wishlist</h3>
+          <span class="badge-accent" id="saved-count">0 items</span>
+        </div>
+        <div id="saved-empty-state" class="empty-state">
+          <div class="empty-icon">💖</div>
+          <h4>Your Wishlist is Empty</h4>
+          <p>Save products while searching to monitor deals and prices anytime.</p>
+          <button class="btn-primary-sm" onclick="switchTab('search')">Discover Products</button>
+        </div>
+        <div class="products-grid" id="saved-products-grid"></div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (Mobile Native Feel) -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchTab('home')" id="nav-home">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('search')" id="nav-search">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Explore</span>
+      </button>
+      <button class="nav-item highlight-tab" onclick="switchTab('recommend')" id="nav-recommend">
+        <div class="center-bubble">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <span>AI Match</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('compare')" id="nav-compare">
+        <div class="badge-dot" id="compare-badge" style="display: none;"></div>
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span>Compare</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('saved')" id="nav-saved">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Saved</span>
+      </button>
+    </nav>
+
+    <!-- Product Detail Modal (Bottom Sheet / Multi-Retailer Comparison) -->
+    <div class="modal-overlay" id="product-modal" onclick="closeProductModal(event)">
+      <div class="modal-sheet" onclick="event.stopPropagation()">
+        <button class="modal-close-btn" onclick="closeProductModal()">✕</button>
+        <div id="modal-content-container">
+          <!-- Dynamically Injected -->
+        </div>
+      </div>
+    </div>
+
+    <!-- User Auth / Profile Modal -->
+    <div class="modal-overlay" id="auth-modal" onclick="closeAuthModal(event)">
+      <div class="modal-sheet" onclick="event.stopPropagation()">
+        <button class="modal-close-btn" onclick="closeAuthModal()">✕</button>
+        <div id="auth-modal-container">
+          <!-- Dynamically Injected: Login / Signup / Profile -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

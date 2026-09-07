@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  buywise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: buywise-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - SERPAPI_KEY=${SERPAPI_KEY}
+      - ENVIRONMENT=production
+    env_file:
+      - .env
+    volumes:
+      - ./backend/buywise.db:/app/backend/buywise.db
+      - ./ml/models:/app/ml/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
