@@ -49,9 +49,8 @@ ml/models/*.h5
 ml/models/*.pt
 
 # Raw and processed data — too large for version control
-data/raw/*.csv
-data/raw/*.json
-data/raw/*.xlsx
+data/raw/
+data/raw/**
 data/processed/*.csv
 data/processed/*.json
 
